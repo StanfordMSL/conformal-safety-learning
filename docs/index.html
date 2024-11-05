@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <!-- Meta tags for social media banners, these should be filled in appropriately as they are your "business card" -->
+  <!-- Replace the content tag with appropriate information -->
+  <meta name="description" content="Sample-efficient safety learning from human feedback.">
+  <meta name="keywords" content="Robotics, Human Feedback, Statistics">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <style>
+    .image-container {
+      display: flex; /* Use flexbox to align items side-by-side */
+      gap: 10px; /* Adds spacing between images */
+    }
+    .image-container img {
+      width: 200px; /* Set the width of each image */
+      height: auto; /* Maintain the image aspect ratio */
+    }
+  </style>
+
+
+  <title>Learning Robot Safety from Sparse Human Feedback using Conformal Prediction</title>
+  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+  rel="stylesheet">
+
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script src="static/js/bulma-carousel.min.js"></script>
+  <script src="static/js/bulma-slider.min.js"></script>
+  <script src="static/js/index.js"></script>
+</head>
+<body>
+
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">Learning Robot Safety from Sparse Human Feedback using Conformal Prediction</h1>
+            <div class="is-size-5 publication-authors">
+              <!-- Paper authors -->
+              <span class="author-block">
+                <a href="https://msl.stanford.edu/people/aaronfeldman" target="_blank">Aaron O. Feldman</a><sup>1</sup>, </span>
+                <span class="author-block">
+                  <a href="https://scholar.google.com/citations?user=02fzkIwAAAAJ&hl=en" target="_blank">Joseph A. Vincent</a><sup>1</sup>, </span>
+                  <span class="author-block">
+                    <a href="https://scholar.google.com/citations?user=-EqbTXoAAAAJ&hl=en" target="_blank">Mac Schwager</a><sup>1</sup>, </span>
+                  </div>
+
+                  <div class="is-size-5 publication-authors">
+                    <span class="author-block"><sup>1</sup>Stanford University
+                  </div>
+
+                  <!-- ArXiv Link -->
+                  <span class="link-block">
+                    <a href="" target="_blank"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>arXiv</span>
+                  </a>
+                </span>
+
+                  <!-- Github link -->
+                  <span class="link-block">
+                    <a href="https://github.com/StanfordMSL/conformal-safety-learning" target="_blank"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                  </a>
+                </span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Teaser video-->
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <h2 class="subtitle has-text-centered">
+        Mathematically defining safety for robotics tasks can be difficult. In our paper we show how sparse human feedback can be used to efficiently learn unsafe (latent) states. We use conformal prediction to calibrate the learned notion of safety resulting in an interpretable warning system and a lightweight recovery policy.
+      </h2>
+    </div>
+  </div>
+</section>
+<!-- End teaser video -->
+
+<!-- Paper abstract -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Ensuring the safety of a robot policy can oftentimes be challenging; user-defined constraints can miss edge cases, learned policies can become unsafe even when trained from safe demonstrations, and safety can be subjective. Therefore, we propose to learn about robot safety by showing policy trajectories to a user who flags unsafe behavior. Using this binary feedback, we leverage the statistical method of conformal prediction to identify a region of states, potentially in learned latent space, theoretically guaranteed to contain a user-specified fraction of future policy errors. Our method is sample-efficient, as it builds on nearest neighbor classification and avoids withholding data as is common with conformal prediction. By alerting if reaching the suspected unsafe region, we obtain a warning system with a guaranteed miss rate. We show in our experiments that from human video labeling of quadcopter trajectories, our warning system can preemptively detect when a visuomotor policy will fail to steer through a designated gate. Lastly, we present an approach for policy improvement by avoiding the suspected unsafe region. In hardware testing of this approach, we achieve safe quadcopter navigation by modifying an obstacle-unaware model predictive controller only with a Gaussian splat simulator of the test environment.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End paper abstract -->
+
+
+
+
+
+
+  <!-- Learning Safety -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Learning Safety</h2>
+        <div class="content has-text-justified">
+          <div class="columns is-vcentered">
+            <div class="column is-one-half">
+              <p>
+                We can construct unsafe sets from either using only the unsafe data (balls) or from using both safe and unsafe data (polyhedra).
+              </p>
+              <div class="image-container">
+                <img src="one_geom.png" alt="unsafe-only geometry">
+                <img src="two_geom.png" alt="unsafe-safe geometry">
+              </div>
+              
+              From these unsafe sets, we can use conformal prediction to estimate the likelihood of a new sample belonging to the unsafe distribution. If we construct the unsafe sets from both safe and unsafe data, then the learned likelihood of a new point being unsafe is a better fit.
+              <div class="image-container">
+                <img src="one_p.png" alt="unsafe-only likelihood">
+                <img src="two_p.png" alt="unsafe-safe likelihood">
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End Learning Safety -->
+
+
+
+
+
+<!-- Warning System -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Warning System</h2>
+        <div class="content has-text-justified">
+          <p>
+            Warning system text.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End Warning System -->
+
+
+
+  
+  <!-- Policy Modification -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Policy Modification</h2>
+        <div class="content has-text-justified">
+          <p>
+            Policy modification text.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End Policy Modification -->
+
+
+
+
+
+<!-- Youtube video -->
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container">
+      <!-- Paper video. -->
+      <h2 class="title is-3">Supplementary Videos</h2>
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          
+          <div class="publication-video">
+            <!-- Youtube embed code here -->
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End youtube video -->
+
+
+
+
+
+<!--BibTex citation -->
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      <pre><code>@misc{feldman2024conformal,
+      title={Learning Robot Safety from Sparse Human Feedback using Conformal Prediction}, 
+      author={Aaron O. Feldman and Joseph A. Vincent and Mac Schwager},
+      year={2024},
+      eprint={},
+      archivePrefix={arXiv},
+      primaryClass={}
+}</code></pre>
+    </div>
+</section>
+<!--End BibTex citation -->
+
+
+  <footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+
+          <p>
+            This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
+          </p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Statcounter tracking code -->
+  
+<!-- You can add a tracker to track page visits by creating an account at statcounter.com -->
+
+    <!-- End of Statcounter Code -->
+
+  </body>
+  </html>
