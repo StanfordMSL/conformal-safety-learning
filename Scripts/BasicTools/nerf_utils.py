@@ -273,6 +273,8 @@ def walk_in_nerf(nerf, starting_pose=np.zeros(6), pose_increment=0.05 * np.ones(
     name = "Current Image"
     cv2.namedWindow(name)
 
+    print('Created window')
+
     while True:
 
         cv2.imshow(name, cv_image)
