@@ -56,6 +56,10 @@
                 <span class="author-block">
                   <a href="https://scholar.google.com/citations?user=02fzkIwAAAAJ&hl=en" target="_blank">Joseph A. Vincent</a><sup>1</sup>, </span>
                   <span class="author-block">
+                    <a href="https://scholar.google.com/citations?user=H4uY3Q4AAAAJ&hl=en&oi=ao" target="_blank">Maximilian Adang</a><sup>1</sup>, </span>
+                    <span class="author-block">
+                      <a href="https://scholar.google.com/citations?user=XVe8UXAAAAAJ&hl=en" target="_blank">Jun En Low</a><sup>1</sup>, </span>
+                  <span class="author-block">
                     <a href="https://scholar.google.com/citations?user=-EqbTXoAAAAJ&hl=en" target="_blank">Mac Schwager</a><sup>1</sup>, </span>
                   </div>
 
@@ -98,8 +102,13 @@
 <!-- Teaser video-->
 <section class="hero teaser">
   <div class="container is-max-desktop">
+    
     <div class="hero-body">
       <h2 class="subtitle has-text-centered">
+        <div style="text-align: center;">
+          <img src="static/images/hero_fig.png" alt="method overview" width="90%">
+        </div>
+        
         Mathematically defining safety for robotics tasks can be difficult. In our paper we show how sparse human feedback can be used to efficiently learn unsafe (latent) states. We use conformal prediction to calibrate the learned notion of safety resulting in an interpretable warning system and a lightweight recovery policy.
       </h2>
     </div>
@@ -115,7 +124,7 @@
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-            Ensuring the safety of a robot policy can oftentimes be challenging; user-defined constraints can miss edge cases, learned policies can become unsafe even when trained from safe demonstrations, and safety can be subjective. Therefore, we propose to learn about robot safety by showing policy trajectories to a user who flags unsafe behavior. Using this binary feedback, we leverage the statistical method of conformal prediction to identify a region of states, potentially in learned latent space, theoretically guaranteed to contain a user-specified fraction of future policy errors. Our method is sample-efficient, as it builds on nearest neighbor classification and avoids withholding data as is common with conformal prediction. By alerting if reaching the suspected unsafe region, we obtain a warning system with a guaranteed miss rate. We show in our experiments that from human video labeling of quadcopter trajectories, our warning system can preemptively detect when a visuomotor policy will fail to steer through a designated gate. Lastly, we present an approach for policy improvement by avoiding the suspected unsafe region. In hardware testing of this approach, we achieve safe quadcopter navigation by modifying an obstacle-unaware model predictive controller only with a Gaussian splat simulator of the test environment.
+            Ensuring the safety of a robot policy can oftentimes be challenging; user-defined constraints can miss edge cases, learned policies can become unsafe even when trained from safe demonstrations, and safety can be subjective. Therefore, we propose to learn about robot safety by showing policy trajectories to a user who flags unsafe behavior. Using this binary feedback, we leverage the statistical method of conformal prediction to identify a region of states, potentially in learned latent space, probabilistically guaranteed to contain a user-specified fraction of future policy errors. Our method is sample-efficient, as it builds on nearest neighbor classification and avoids withholding data as is common with conformal prediction. By alerting if reaching the suspected unsafe region, we obtain a warning system with a guaranteed miss rate. We show in our experiments that from human video labeling of quadcopter trajectories, our warning system can preemptively detect when a visuomotor policy will fail to steer through a designated gate. Lastly, we present an approach for policy improvement by avoiding the suspected unsafe region. We verify its performance in experimental testing with 30 quadcopter flights across 6 navigation tasks; using human feedback we improve safety for a model predictive controller. All code is available on GitHub.
           </p>
         </div>
       </div>
@@ -130,36 +139,36 @@
 
 
   <!-- Learning Safety -->
-<section class="section">
-  <div class="container is-max-desktop">
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Learning Safety</h2>
-        <div class="content has-text-justified">
-          <div class="columns is-vcentered">
-            <div class="column is-one-half">
-              <p>
-                We can construct unsafe sets from either using only the unsafe data (balls) or from using both safe and unsafe data (polyhedra).
-              </p>
-              <div class="image-container">
-                <img src="one_geom.png" alt="unsafe-only geometry">
-                <img src="two_geom.png" alt="unsafe-safe geometry">
-              </div>
-              
-              From these unsafe sets, we can use conformal prediction to estimate the likelihood of a new sample belonging to the unsafe distribution. If we construct the unsafe sets from both safe and unsafe data, then the learned likelihood of a new point being unsafe is a better fit.
-              <div class="image-container">
-                <img src="one_p.png" alt="unsafe-only likelihood">
-                <img src="two_p.png" alt="unsafe-safe likelihood">
-              </div>
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Learning Safety</h2>
+          <div class="content has-text-justified">
+            <div class="columns is-vcentered">
+              <div class="column is-one-half">
+                <p>
+                  We construct unsafe sets using conformal prediction from either using only the unsafe data (balls, left) or from using both safe and unsafe data (polyhedra, right).
+                </p>
+                <div class="image-container">
+                  <img src="static/images/one_geom.png" alt="unsafe-only geometry" style="width: 50%; max-width: 400px;">
+                  <img src="static/images/two_geom.png" alt="unsafe-safe geometry" style="width: 50%; max-width: 400px;">
+                </div>
+                
+                We can also probabilistically assess whether a new point belongs to the unsafe distribution using the conformal p-value. Constructing the unsafe sets from both safe and unsafe data, we can better distinguish safe and unsafe points.
+                <div class="image-container">
+                  <img src="static/images/one_p.png" alt="unsafe-only likelihood" style="width: 50%; max-width: 400px;">
+                  <img src="static/images/two_p.png" alt="unsafe-safe likelihood" style="width: 50%; max-width: 400px;">
+                </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
-<!-- End Learning Safety -->
+  </section>
+  <!-- End Learning Safety -->
 
 
 
@@ -195,6 +204,28 @@
           <p>
             Policy modification text.
           </p>
+          <div style="text-align: center;">
+            <img src="static/images/chair.png" alt="chair" width="75%">
+          </div>
+          <div style="text-align: center;">
+            <img src="static/images/gate.png" alt="gate" width="75%">
+          </div>
+          <div style="text-align: center;">
+            <img src="static/images/ladder.png" alt="ladder" width="75%">
+          </div>
+
+          <!-- <div class="image-container">
+            <img src="static/images/chair.png" alt="chair" style="width: 50%; max-width: 400px;">
+            <img src="" style="width: 50%; max-width: 400px;">
+          </div>
+          <div class="image-container">
+            <img src="static/images/gate.png" alt="gate" style="width: 50%; max-width: 400px;">
+            <img src="" style="width: 50%; max-width: 400px;">
+          </div>
+          <div class="image-container">
+            <img src="static/images/ladder.png" alt="ladder" style="width: 50%; max-width: 400px;">
+            <img src="" style="width: 50%; max-width: 400px;">
+          </div> -->
         </div>
       </div>
     </div>
@@ -236,7 +267,7 @@
       <h2 class="title">BibTeX</h2>
       <pre><code>@misc{feldman2024conformal,
       title={Learning Robot Safety from Sparse Human Feedback using Conformal Prediction}, 
-      author={Aaron O. Feldman and Joseph A. Vincent and Mac Schwager},
+      author={Aaron O. Feldman and Joseph A. Vincent and Maximilian Adang and Jun En Low and Mac Schwager},
       year={2024},
       eprint={},
       archivePrefix={arXiv},
