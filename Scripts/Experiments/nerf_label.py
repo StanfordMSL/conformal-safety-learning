@@ -92,7 +92,7 @@ if __name__ == '__main__':
     else:
         print('Starting loading image trajectories')
         image_rollouts = pickle.load(open(SAVE_NAME, 'rb'))
-    
+
     # Save the Original Trajectories
     if SAVE:
         pickle.dump(image_rollouts, open(SAVE_NAME, 'wb'))

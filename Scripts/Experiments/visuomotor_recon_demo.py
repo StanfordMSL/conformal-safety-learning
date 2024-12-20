@@ -10,7 +10,12 @@ from Transformers.auto_transformer import VAE, Autoencoder, AutoencoderTransform
 from Transformers.PCAtransformer import PCATransformer
 from moviepy.editor import VideoFileClip
 
-def visualize_recon_trajs(n_safe_collect_vis, rollouts, H, W, hz, transformers, names, save_dir, verbose=True):
+def visualize_recon_trajs(n_safe_collect_vis, rollouts, H, W, hz, transformers, names, save_dir, verbose=True, size=None):
+    if size is not None:
+        border_width = int(1/50 * size[0])
+    else:
+        border_width = 1
+    
     for i in range(n_safe_collect_vis):    
         if verbose:
             print(f'Starting video {i}')    
@@ -19,17 +24,17 @@ def visualize_recon_trajs(n_safe_collect_vis, rollouts, H, W, hz, transformers, 
 
         # Save as video
         movie_name = os.path.join(save_dir, f'rollout_{i}.mp4')
-        vh.save_traj(images, movie_name, hz, save_as_video=True)
+        vh.save_traj(images, movie_name, hz, save_as_video=True, size=size)
         image_dir = os.path.join(save_dir, f'rollout_{i}')
 
         # Save as images
-        vh.save_traj(images, image_dir, save_as_video=False, border_colors=['black']*len(images), border_width=1)
+        vh.save_traj(images, image_dir, save_as_video=False, border_colors=['black']*len(images), border_width=border_width, size=size)
         
         # Save as GIF
         gif_name = os.path.join(save_dir, f'rollout_{i}.gif')
         videoClip = VideoFileClip(movie_name)
         videoClip.write_gif(gif_name)
-
+        
         for j, transformer in enumerate(transformers):
             if verbose:
                 print(f'Starting transformer {j}')
@@ -41,11 +46,11 @@ def visualize_recon_trajs(n_safe_collect_vis, rollouts, H, W, hz, transformers, 
 
             # Save as video
             movie_name = os.path.join(save_dir, f'{name}_rollout_{i}.mp4')
-            vh.save_traj(recon_images, movie_name, hz, save_as_video=True)
+            vh.save_traj(recon_images, movie_name, hz, save_as_video=True, size=size)
             image_dir = os.path.join(save_dir, f'{name}_rollout_{i}')
 
             # Save as images
-            vh.save_traj(recon_images, image_dir, save_as_video=False, border_colors=['black']*len(recon_images), border_width=1)
+            vh.save_traj(recon_images, image_dir, save_as_video=False, border_colors=['black']*len(recon_images), border_width=border_width, size=size)
             
             # Save as GIF
             gif_name = os.path.join(save_dir, f'{name}_rollout_{i}.gif')
@@ -59,7 +64,7 @@ if __name__ == '__main__':
     # Whether to load (or train) PCA and AE transformations
     LOAD = True
     # Whether to save the resulting models
-    SAVE = False
+    SAVE = True
 
     #### Load the data ####
     train_rollouts_list = pickle.load(open(os.path.join(EXP_DIR, 'train_rollouts_list'), 'rb'))
@@ -123,8 +128,10 @@ if __name__ == '__main__':
     W = 50
     hz = 50
 
+    size = (300,300)
+
     safe_save_dir = os.path.join(EXP_DIR, 'recon_collection/safe_rollouts')
-    visualize_recon_trajs(n_safe_collect_vis, safe_test_rollouts, H, W, hz, transformers, names, safe_save_dir, verbose=True)
+    visualize_recon_trajs(n_safe_collect_vis, safe_test_rollouts, H, W, hz, transformers, names, safe_save_dir, verbose=True, size=size)
 
     unsafe_save_dir = os.path.join(EXP_DIR, 'recon_collection/unsafe_rollouts')
-    visualize_recon_trajs(n_safe_collect_vis, unsafe_test_rollouts, H, W, hz, transformers, names, unsafe_save_dir, verbose=True)
+    visualize_recon_trajs(n_safe_collect_vis, unsafe_test_rollouts, H, W, hz, transformers, names, unsafe_save_dir, verbose=True, size=size)

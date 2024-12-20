@@ -112,7 +112,7 @@ if __name__ == "__main__":
     # Whether to load (or generate) data from repeated fitting and running of the modified policy
     LOAD_FILTERING_DATA = True
     # Whether to save the resulting figure
-    SAVE = False
+    SAVE = True
     
     # Transformer settings
     transformer = None # could also try PCA
@@ -172,7 +172,7 @@ if __name__ == "__main__":
     no_track_scp = FilteredSCPMPC()
 
     filter_systems = [backup_scp, no_track_scp]
-    filter_names = ['Backup MPC', 'No Track MPC']
+    filter_names = ['Backup MPC', 'Naive Const. MPC']
 
     #### Get Filtering Data ####
 

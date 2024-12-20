@@ -189,10 +189,12 @@ if __name__ == '__main__':
     if output_dir:
         axes = [ax1,ax2,ax3,ax4,ax5,ax6]
         names = ['one_geom', 'two_geom', 'one_p', 'two_p', 'one_cov', 'two_cov']
+        titles = ['Unsafe-Only', 'Unsafe-Safe', 'Unsafe-Only', 'Unsafe-Safe', 'Unsafe-Only', 'Unsafe-Safe']
 
         for i, name in enumerate(names):
             ax = axes[i]
             fig = ax.get_figure()
+            fig.suptitle(titles[i])
             full_name = os.path.join(output_dir, name)
             fig.savefig(full_name + '.svg', bbox_inches='tight')
             fig.savefig(full_name + '.png', bbox_inches='tight', dpi=300)

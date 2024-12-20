@@ -1,5 +1,5 @@
 # conformal-safety-learning
-Companion code for the paper Learning Robot Safety from Sparse Human Feedback using Conformal Prediction.
+Companion code for the paper "Learning Robot Safety from Sparse Human Feedback using Conformal Prediction" by Aaron O. Feldman, Joseph A. Vincent, Maximilian Adang, Jun En Low, and Mac Schwager.
 
 Please reach out to aofeldma@stanford.edu for any code issues/questions.
 
@@ -14,12 +14,18 @@ Note: the following procedure was tested using a WSL2 linux environment on a com
     d. Upgrade pip: python -m pip install --upgrade pip
     e. Separately install nerfstudio, following https://docs.nerf.studio/quickstart/installation.html
     (This can be skipped if you do not want to use nerf functionality)
-    f. Install other dependencies: pip install -e .
+    f. Separately install clip, following https://github.com/openai/CLIP
+    (This can be skipped if you do not want to use CLIP on the visuomotor policy images)
+    g. Install other dependencies: pip install -e .
 
 ### Point Gaussian splat to correct directory (assuming nerfstudio installed)
     a. Open config.yml found at data\nerf_data\outputs\cp_1203_0\splatfacto\2024-12-03_150258
     b. Under the line "data: &id003 !!python/object/apply:pathlib.PosixPath", modify the path to your absolute path to data/nerf_data/cp_1203_0, with a new hyphenated line for each subdirectory
     c. Under the line "output_dir: !!python/object/apply:pathlib.PosixPath", similarly modify with the absolute path to data/nerf_data/outputs
+
+### Download data
+    a. To recreate experimental results, download zipped data at https://drive.google.com/file/d/1_Y5M49tdPjULlX6H2U2Bfk220svOM7uB/view?usp=drive_link
+    b. Extract the data and place it at conformal-safety-learning/data
 
 ## Scripts Organization
     a. Basic Tools: Contains scripts for basic functionality like simulation experiment setup, visualization, etc.

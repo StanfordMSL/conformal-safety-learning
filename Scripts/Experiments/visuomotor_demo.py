@@ -11,11 +11,12 @@ from Transformers.PCAtransformer import PCATransformer
 from Transformers.KPCAtransformer import KPCATransformer
 from BasicTools.vision_helpers import images_to_video, save_traj
 
-def save_p_val_traj(EXP_DIR, safe_test_rollouts, unsafe_test_rollouts, num_vis, hz, label_size=0.5, border_width=3, randomize=True):
+def save_p_val_traj(EXP_DIR, safe_test_rollouts, unsafe_test_rollouts, num_vis, hz, label_size=10, border_width=3, randomize=True, label_in_frame=True, size=None):
     """Visualize test trajectories with p-value border coloring and text overlaid."""
     test_rollouts_list = [safe_test_rollouts, unsafe_test_rollouts]
 
-    cmap = plt.get_cmap('viridis')
+    # cmap = plt.get_cmap('viridis')
+    cmap = plt.get_cmap('plasma')
 
     for i, prefix in enumerate(['safe', 'unsafe']):
         test_rollouts = test_rollouts_list[i]
@@ -48,21 +49,22 @@ def save_p_val_traj(EXP_DIR, safe_test_rollouts, unsafe_test_rollouts, num_vis, 
 
             movie_name = os.path.join(EXP_DIR, 'p_val', f'{prefix}_rollouts', f'rollout_{j}.mp4')
             save_traj(images, movie_name, hz=hz, save_as_video=True,
-                        image_labels=labels, label_size=label_size, border_colors=colors, border_width=border_width)
+                        image_labels=labels, label_size=label_size, border_colors=colors, border_width=border_width, label_in_frame=label_in_frame, size=size)
             
             image_dir = os.path.join(EXP_DIR, 'p_val', f'{prefix}_rollouts', f'rollout_{j}')
             save_traj(images, image_dir, save_as_video=False,
-                        image_labels=labels, label_size=label_size, border_colors=colors, border_width=border_width)
+                        image_labels=labels, label_size=label_size, border_colors=colors, border_width=border_width, label_in_frame=label_in_frame, size=size)
             
             # Save also unlabeled
             image_dir_unlabeled = os.path.join(EXP_DIR, 'p_val', f'{prefix}_rollouts', f'unlabeled_rollout_{j}')
             save_traj(images, image_dir_unlabeled, save_as_video=False,
-                        image_labels=labels, label_size=0, border_colors=colors, border_width=border_width)
+                        image_labels=labels, label_size=0, border_colors=colors, border_width=border_width, size=size)
 
             # Also save GIF
             gif_name = os.path.join(EXP_DIR, 'p_val', f'{prefix}_rollouts', f'rollout_{j}.gif')
-            videoClip = VideoFileClip(movie_name)
-            videoClip.write_gif(gif_name)
+            videoClip = VideoFileClip(movie_name, fps_source='fps')
+            videoClip = videoClip.set_fps(hz)  # Enforce a frame rate of 50 FPS for the video
+            videoClip.write_gif(gif_name, fps=hz)
 
 # Adapted from CS233 HW4
 def plot_2d_embedding_in_grid_greedy_way(two_dim_emb, images, canvas_dims, small_dims, border_width=0, border_colors=None):
@@ -158,9 +160,8 @@ def save_p_val_canvas(vis_rollouts, alerter, output_path, subselect, small_dims=
     im.save(output_path)
 
 if __name__ == '__main__':
+    #### User Settings ####
     EXP_DIR = os.path.join('../data', 'visuomotor')
-
-    rollouts = pickle.load(open(os.path.join(EXP_DIR, 'labeled_rollouts.pkl'), 'rb'))
 
     # Each (num_safe, num_unsafe)
     # Only safe for transformer fitting
@@ -170,6 +171,12 @@ if __name__ == '__main__':
 
     np.random.seed(0)
 
+    # Whether to load (or fit) the alert system
+    LOAD = True
+
+    #### Load the data ####
+
+    rollouts = pickle.load(open(os.path.join(EXP_DIR, 'labeled_rollouts.pkl'), 'rb'))
     train_rollouts, calib_rollouts, test_rollouts = hp.split_rollouts(rollouts, train_vals, calib_vals, randomize=False)
 
     # Used in conformal calibration, reuse the train_rollouts and some unsafe
@@ -181,60 +188,72 @@ if __name__ == '__main__':
 
     #### Save Collection Data ####
 
-    n_safe_collect_vis = 3
-    n_unsafe_collect_vis = 3
+    n_safe_collect_vis = 0 # 3
+    n_unsafe_collect_vis = 0 # 3
+
+    size = (300,300)
+    border_width= int(1/50 * size[0])
+    hz = 50
 
     # Save a sample safe video
     for i in range(n_safe_collect_vis):
         safe_images = [obs.reshape((50,50,-1)) for obs in train_rollouts.trajs[i].observations]
         movie_name = os.path.join(EXP_DIR, f'collection/safe_rollouts/rollout_{i}.mp4')
-        save_traj(safe_images, movie_name, hz=50, save_as_video=True)
+        save_traj(safe_images, movie_name, hz=hz, save_as_video=True, size=size)
         image_dir = os.path.join(EXP_DIR, f'collection/safe_rollouts/rollout_{i}')
-        save_traj(safe_images, image_dir, save_as_video=False, border_colors=['black']*len(safe_images), border_width=1)
+        save_traj(safe_images, image_dir, save_as_video=False, border_colors=['black']*len(safe_images), border_width=border_width, size=size)
         # Also save GIF
         gif_name = os.path.join(EXP_DIR, f'collection/safe_rollouts/rollout_{i}.gif')
-        videoClip = VideoFileClip(movie_name)
-        videoClip.write_gif(gif_name)
+        videoClip = VideoFileClip(movie_name, fps_source='fps')
+        videoClip = videoClip.set_fps(hz)  # Enforce a frame rate of 50 FPS for the video
+        videoClip.write_gif(gif_name, fps=hz)
 
     # Save a sample unsafe video
     for i in range(n_unsafe_collect_vis):
         unsafe_images = [obs.reshape((50,50,-1)) for obs in calib_rollouts.trajs[i].observations]
         movie_name = os.path.join(EXP_DIR, f'collection/unsafe_rollouts/rollout_{i}.mp4')
-        save_traj(unsafe_images, movie_name, hz=50, save_as_video=True)
+        save_traj(unsafe_images, movie_name, hz=hz, save_as_video=True, size=size)
         image_dir = os.path.join(EXP_DIR, f'collection/unsafe_rollouts/rollout_{i}')
         # Mark last image with red border
-        save_traj(unsafe_images, image_dir, save_as_video=False, border_colors=['black']*(len(unsafe_images)-1)+['red'], border_width=1)
+        save_traj(unsafe_images, image_dir, save_as_video=False, border_colors=['black']*(len(unsafe_images)-1)+['red'], border_width=border_width, size=size)
         # Also save GIF
         gif_name = os.path.join(EXP_DIR, f'collection/unsafe_rollouts/rollout_{i}.gif')
-        videoClip = VideoFileClip(movie_name)
-        videoClip.write_gif(gif_name)
+        videoClip = VideoFileClip(movie_name, fps_source='fps')
+        videoClip = videoClip.set_fps(hz)  # Enforce a frame rate of 50 FPS for the video
+        videoClip.write_gif(gif_name, fps=hz)
 
     #### Fit Warning System ####
 
-    # Fit the transformer to train safe trajectories
-    d = 400
-    transformer = PCATransformer(n_components=d, weight=False, normalize=np.ones(7500)*255., subselect=15, incremental=False)
-    transformer.fit(train_rollouts)
+    if not LOAD:
+        # Fit the transformer to train safe trajectories
+        d = 400
+        transformer = PCATransformer(n_components=d, weight=False, normalize=np.ones(7500)*255., subselect=15, incremental=False)
+        transformer.fit(train_rollouts)
 
-    print('Fit transformer')
+        print('Fit transformer')
 
-    # Fit the alerter reusing the train safe trajectories and some unsafe
-    alerter = CPAlertSystem(transformer, pwr=True, type_flag='lrt')
-    alerter.fit(use_rollouts, fit_transform=False)
-    
-    pickle.dump(alerter, open(os.path.join(EXP_DIR, 'alerter'), 'wb'))
-
-    print('Fit alerter')
+        # Fit the alerter reusing the train safe trajectories and some unsafe
+        alerter = CPAlertSystem(transformer, pwr=True, type_flag='lrt')
+        alerter.fit(use_rollouts, fit_transform=False)
+        
+        pickle.dump(alerter, open(os.path.join(EXP_DIR, 'alerter'), 'wb'))
+        print('Fit alerter')
+    else:
+        alerter = pickle.load(open(os.path.join(EXP_DIR, 'alerter'), 'rb'))
+        transformer = alerter.transformer
+        d = transformer.n_components
     
     #### Save p-Value Test Data ####
 
     num_runtime_vis = (7,7)
-    label_size=0.5
-    border_width=3
-    randomize=False
+    
+    size = (300,300)
+    label_size = int(10/50 * size[0])
+    border_width = int(3/50 * size[0])
+    randomize = False
     hz = 50
     save_p_val_traj(EXP_DIR, safe_test_rollouts, unsafe_test_rollouts, num_runtime_vis, hz,
-                    label_size=label_size, border_width=border_width, randomize=randomize)
+                    label_size=label_size, border_width=border_width, randomize=randomize, label_in_frame=False, size=size)
 
     #### p-Value Canvas ####
     

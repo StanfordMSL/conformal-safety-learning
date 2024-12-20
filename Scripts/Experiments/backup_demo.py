@@ -28,7 +28,7 @@ if __name__ == '__main__':
     # Whether to load (or execute from scrath) test runs of the modified policy
     LOAD_TEST = True
     # Whether to save the results
-    SAVE = False
+    SAVE = True
 
     verbose = True
 
@@ -156,11 +156,14 @@ if __name__ == '__main__':
 
     if SAVE:
         names = ['fallback_rollouts', f'{FILTER_SUFFIX}']
+        titles = ['', 'Proposed Backup MPC']
         axes = [ax0, ax1]
         for i, name in enumerate(names):
             ax = axes[i]
             full_name = os.path.join(output_dir, name)
             fig = ax.get_figure()
+            if titles[i]:
+                fig.suptitle(titles[i])
 
             fig.tight_layout()
 

@@ -25,13 +25,13 @@ if __name__ == '__main__':
     # Whether to load (or generate) the training and test rollouts
     LOAD_DATA = True
     # Whether to save the training and test rollouts
-    SAVE_DATA = False
+    SAVE_DATA = True
     # Whether to load (or generate) the results of NNCP ablations
     LOAD_NNCP = True
     # Whether to load (or generate) the results of ML comparisons
     LOAD_ML = True
     # Whether to save the albation and ML results and figures
-    SAVE = False
+    SAVE = True
 
     # Fix the random seed
     np.random.seed(0)
@@ -200,6 +200,7 @@ if __name__ == '__main__':
 
     if SAVE:
         names = ['conditional_miss', 'total_miss', 'omega', 'ml_baselines']
+        titles = ['', 'Error Rate', 'Classification Power', '']
         axes = [ax1, ax2, ax3, ax4]
         figsizes = [(5,3),(5,3),(5,3),(5,3)]
 
@@ -208,9 +209,11 @@ if __name__ == '__main__':
             figsize = figsizes[i]
             full_name = os.path.join(output_dir, name)
             fig = ax.get_figure()
+            if titles[i]:
+                fig.suptitle(titles[i])
 
             # Resize
-            fig.set_size_inches(*figsize) 
+            fig.set_size_inches(*figsize)
             fig.tight_layout()
 
             fig.savefig(full_name + '.svg')

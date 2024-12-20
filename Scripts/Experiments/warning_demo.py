@@ -24,7 +24,7 @@ if __name__ == '__main__':
     # Whether to load (or generate) the training rollouts
     LOAD = True
     # Whether to save the rollouts and figures
-    SAVE = False
+    SAVE = True
 
     if EXP_NAME == 'pos':
         output_dir = '../Figures/warning_demo_figs'
@@ -122,12 +122,13 @@ if __name__ == '__main__':
 
     if SAVE:
         names = ['train_rollouts', 'warn_geom', 'alert_rollouts']
+        titles = ['Original Trajectories', 'SUS Region', 'Warning System Test']
         axes = [ax1, ax2, ax3]
         for i, name in enumerate(names):
             ax = axes[i]
             full_name = os.path.join(output_dir, name)
             fig = ax.get_figure()
-
+            fig.suptitle(titles[i])
             fig.tight_layout()
 
             # Previously had bbox_inches='tight' but was clipping

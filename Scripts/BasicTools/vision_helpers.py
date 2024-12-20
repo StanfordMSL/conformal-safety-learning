@@ -139,6 +139,7 @@ def images_to_video(image_list, output_path, hz):
     
     # Initialize the video writer object
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # Codec for .mp4
+    # fourcc = cv2.VideoWriter_fourcc(*'avc1')  # H.264 codec
     video = cv2.VideoWriter(output_path, fourcc, hz, (width, height))
     
     # Convert each PIL Image to a numpy array and write it to the video
@@ -149,7 +150,10 @@ def images_to_video(image_list, output_path, hz):
     # Release the video writer object
     video.release()
 
-def save_traj(images, output_path, hz=None, save_as_video=True, image_labels=[], label_size=0, border_colors=None, border_width=0):
+    # NOTE: once the video is generated, for html compatibility run
+    # ffmpeg -i output.mp4 -c:v libx264 -preset slow -crf 22 -movflags +faststart output_h264.mp4
+
+def save_traj(images, output_path, hz=None, save_as_video=True, image_labels=[], label_size=0, border_colors=None, border_width=0, label_in_frame=True, size=None):
     """Save a video associated with a trajectory, optionally labelling each image and assigning it a border color."""
 
     # Input images are assumed to be [0,255] float values
@@ -158,6 +162,11 @@ def save_traj(images, output_path, hz=None, save_as_video=True, image_labels=[],
     for i, temp in enumerate(images):
         image = temp.copy()
         
+        if size is not None:
+            fig = Image.fromarray(np.uint8(image), 'RGB')
+            fig = fig.resize(size)
+            image = np.array(fig).astype('float64')
+
         # Potentially add a border via overwrite
         if border_width > 0 and border_colors is not None:
             if isinstance(border_colors[i], str):          
@@ -165,7 +174,7 @@ def save_traj(images, output_path, hz=None, save_as_video=True, image_labels=[],
                 rgb_tuple = mcolors.to_rgb(border_colors[i])
                 color = tuple(int(x * 255) for x in rgb_tuple)
             else:
-                # Peel of the RGB components
+                # Peel off the RGB components
                 color = border_colors[i][:3]
             image[:border_width,:] = color
             image[-border_width:,:] = color
@@ -182,16 +191,45 @@ def save_traj(images, output_path, hz=None, save_as_video=True, image_labels=[],
         #     fig = ImageOps.expand(fig, border=border_width, fill=border_colors[i])
 
         # Potentially add text
-        if label_size > 0:
+        if label_size > 0 and i < len(image_labels):
+            label_text = image_labels[i]
+
+            # Load a resizable font based on label_size
+            try:
+                font = ImageFont.truetype("DejaVuSans.ttf", label_size)
+            except IOError:
+                font = ImageFont.load_default()  # Fallback if "DejaVuSans.ttf" is unavailable
+                breakpoint()
+
             draw = ImageDraw.Draw(fig)
+            font_color = (0, 0, 0) # RGB so black
 
-            # Define the text and its properties
-            font = ImageFont.load_default()
-            font_color = (0, 0, 0) # RGB
-            position = (0, 0)  # Top-left corner of the image
+            if label_in_frame:
+                # Define the text and its properties
+                position = (0, 0)  # Top-left corner of the image
 
-            # Add the text to the image
-            draw.text(position, image_labels[i], font=font, fill=font_color)
+                # Add the text to the image
+                draw.text(position, label_text, font=font, fill=font_color)
+            else:
+                # Calculate the text bounding box dimensions
+                bbox = font.getbbox(label_text)
+                text_width, text_height = bbox[2] - bbox[0], bbox[3] - bbox[1]
+
+                # Create a new canvas with extra space for the label
+                new_height = image.shape[0] + text_height + int(0.25 * text_height)  # Add padding below text
+                new_width = image.shape[1]
+                new_canvas = Image.new("RGB", (new_width, new_height), color=(255, 255, 255))
+
+                # Paste the original image onto the new canvas
+                new_canvas.paste(fig, (0, 0))
+
+                # Draw the label on the new canvas
+                text_position = ((new_width - text_width) // 2, image.shape[0])  # Centered below the image
+                draw = ImageDraw.Draw(new_canvas)
+                draw.text(text_position, label_text, font=font, fill=font_color)
+
+                # Update the figure to the new canvas
+                fig = new_canvas
 
         fig_list.append(fig)
 

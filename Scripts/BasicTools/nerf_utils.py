@@ -28,7 +28,7 @@ class NeRF():
 
         # Pytorch Config
         use_cuda = torch.cuda.is_available()           
-        self.device = torch.device("cuda:0" if use_cuda else "cpu")
+        self.device = torch.device("cuda" if use_cuda else "cpu") # Was "cuda:0"
 
         # Can programmatically modify certain key attributes but instead just change in the relevant .yml file
         # if nerf_dir_path is not None:
@@ -95,7 +95,7 @@ class NeRF():
 
     def static_render(self, state:np.ndarray) -> torch.Tensor:
         # State is of form (px, py, pz, phi, theta, psi, vx, vy, vz) in ENU
-
+        
         # Extract the pose
         # state_ned = cu.ENU_to_NED(state)
         # T_c2n = pose2nerf_transform(np.hstack((state_ned[:3], state_ned[6:])))
@@ -106,9 +106,13 @@ class NeRF():
         camera_to_world = P_c2n[None,:3, ...]
         self.camera_out.camera_to_worlds = camera_to_world
 
+        breakpoint()
+
         # render outputs
         with torch.no_grad():
             outputs = self.pipeline.model.get_outputs_for_camera(self.camera_out, obb_box=None)
+
+        breakpoint()
 
         image = outputs["rgb"]
 
@@ -263,6 +267,8 @@ def walk_in_nerf(nerf, starting_pose=np.zeros(6), pose_increment=0.05 * np.ones(
         cv2.putText(cv_image, pose_text, (10, 30), font, font_scale, font_color, thickness, line_type)
 
         return cv_image
+    
+    breakpoint()
 
     curr_state = np.append(starting_pose, np.array([0.0,0.0,0.0]))
 
@@ -273,7 +279,7 @@ def walk_in_nerf(nerf, starting_pose=np.zeros(6), pose_increment=0.05 * np.ones(
     name = "Current Image"
     cv2.namedWindow(name)
 
-    print('Created window')
+    breakpoint()
 
     while True:
 
@@ -388,15 +394,27 @@ def add_meshes_to_server(server, path_names, scale=1):
     return meshes
 
 if __name__ == '__main__':
+    #### User settings ####
     NERF_NAME = "mid_room"
     nerf_dir_path = "../data/nerf_data"
     nerf = get_nerf(nerf_dir_path, NERF_NAME)
 
     bounds = np.array([[-8,8],[-3,3],[0,3]])
 
+    pose = np.array([-6,0,1, 0,0,0])
+    state = np.append(pose, [0,0,0])
+
+    #### Try one render ####
+
+    nerf.static_render(state)
+
+    #### Visualize point cloud ####
+
     threshold = 0.0
     point_cloud, point_colors = nerf.generate_point_cloud(bounds,threshold)
     vh.plot_point_cloud(point_cloud, bounds, view_angles=(45,-45), figsize=None, colors=point_colors)
     plt.show()
 
-    walk_in_nerf(nerf, np.array([-6,0,1, 0,0,0]))
+    #### Walk around nerf ####
+
+    walk_in_nerf(nerf, pose)

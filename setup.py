@@ -15,6 +15,8 @@ setup(
         "open3d",
         "control",
         "opencv-python",
-        "albumentations"
+        "albumentations",
+        "moviepy",
+        "viser==0.2.19"
     ]
 )

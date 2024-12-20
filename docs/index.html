@@ -124,8 +124,7 @@
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-            Ensuring the safety of a robot policy can oftentimes be challenging; user-defined constraints can miss edge cases, learned policies can become unsafe even when trained from safe demonstrations, and safety can be subjective. Therefore, we propose to learn about robot safety by showing policy trajectories to a user who flags unsafe behavior. Using this binary feedback, we leverage the statistical method of conformal prediction to identify a region of states, potentially in learned latent space, probabilistically guaranteed to contain a user-specified fraction of future policy errors. Our method is sample-efficient, as it builds on nearest neighbor classification and avoids withholding data as is common with conformal prediction. By alerting if reaching the suspected unsafe region, we obtain a warning system with a guaranteed miss rate. We show in our experiments that from human video labeling of quadcopter trajectories, our warning system can preemptively detect when a visuomotor policy will fail to steer through a designated gate. Lastly, we present an approach for policy improvement by avoiding the suspected unsafe region. We verify its performance in experimental testing with 30 quadcopter flights across 6 navigation tasks; using human feedback we improve safety for a model predictive controller. All code is available on GitHub.
-          </p>
+            Ensuring robot safety can oftentimes be challenging; user-defined constraints can miss edge cases, learned policies can become unsafe even when trained from safe demonstrations, and safety can be subjective. Therefore, we propose to learn about robot safety by showing policy trajectories to a user who flags unsafe behavior. Using this binary feedback, we leverage the statistical method of conformal prediction to identify a region of states, potentially in learned latent space, probabilistically guaranteed to contain a user-specified fraction of future policy errors. Our method is sample-efficient, as it builds on nearest neighbor classification and avoids withholding data as is common with conformal prediction. By alerting if reaching the suspected unsafe region, we obtain a warning system with a guaranteed miss rate. We show in our experiments that from human video labeling of quadcopter trajectories, our warning system can preemptively detect when a visuomotor policy will fail to steer through a designated gate. Lastly, we present an approach for policy improvement by avoiding the suspected unsafe region. We verify its performance in experimental testing with 30 quadcopter flights across 6 navigation tasks; using human feedback we improve safety for a model predictive controller.          </p>
         </div>
       </div>
     </div>
@@ -170,10 +169,6 @@
   </section>
   <!-- End Learning Safety -->
 
-
-
-
-
 <!-- Warning System -->
 <section class="section">
   <div class="container is-max-desktop">
@@ -182,8 +177,7 @@
         <h2 class="title is-3">Warning System</h2>
         <div class="content has-text-justified">
           <p>
-            Warning system text.
-          </p>
+            We provide a warning system by alerting when new states fall in the learned unsafe set. Because the set is calibrated, the user can dictate the miss rate, i.e., how often the warning system will fail to alarm during unsafe trajectories. More generally, we can track the conformal p-values for runtime safety monitoring. With this approach, we detect when a visuomotor quadcopter policy will fail to fly through a designated gate.          </p>
         </div>
       </div>
     </div>
@@ -191,10 +185,66 @@
 </section>
 <!-- End Warning System -->
 
+<!--Warning Train video-->
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body" style="display: flex; justify-content: space-between; align-items: center; gap: 70px;">
+      <!-- Safe Label Video with Caption -->
+      <div style="text-align: center;">
+        <video poster="" id="safe-video" autoplay controls muted loop width="300" height="300">
+          <source src="static/videos/train_safe_rollout.mp4" type="video/mp4">
+        </video>
+        <h2 class="subtitle has-text-centered">
+          Labeled safe (goes through gate)
+        </h2>
+      </div>
+
+      <!-- Unsafe Label Video with Caption -->
+      <div style="text-align: center;">
+        <video poster="" id="unsafe-video" autoplay controls muted loop width="300" height="300">
+          <source src="static/videos/train_unsafe_rollout.mp4" type="video/mp4">
+        </video>
+        <h2 class="subtitle has-text-centered">
+          Labeled unsafe (goes over gate)
+        </h2>
+      </div>
+
+    </div>
+  </div>
+</section>
+<!-- End warning train video -->
 
 
+<!--Warning test video-->
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body" style="display: flex; justify-content: space-between; align-items: center; gap: 70px;">
+        <!-- Test Safe with Caption -->
+        <div style="text-align: center;">
+          <video poster="" id="example1-video" autoplay controls muted loop width="300" height="300">
+            <source src="static/videos/test_safe_rollout.mp4" type="video/mp4">
+          </video>
+          <h2 class="subtitle has-text-centered">
+            Test Safe (p remains low)
+          </h2>
+        </div>
   
-  <!-- Policy Modification -->
+        <!-- Test Unsafe with Caption -->
+        <div style="text-align: center;">
+          <video poster="" id="example2-video" autoplay controls muted loop width="300" height="300">
+            <source src="static/videos/test_unsafe_rollout.mp4" type="video/mp4">
+          </video>
+          <h2 class="subtitle has-text-centered">
+            Test Unsafe (p increases)
+          </h2>
+        </div>
+
+    </div>
+  </div>
+</section>
+<!-- End warning test video -->
+
+<!-- Policy Modification -->
 <section class="section">
   <div class="container is-max-desktop">
     <div class="columns is-centered has-text-centered">
@@ -202,8 +252,7 @@
         <h2 class="title is-3">Policy Modification</h2>
         <div class="content has-text-justified">
           <p>
-            Policy modification text.
-          </p>
+            We can improve the robot policy by using a backup safety mode which is triggered upon a warning system alert. In the backup safety mode, we steer to historical safe data while constraining to avoid the suspected unsafe region. Using this approach, we teach a quadcopter to more safely navigate and avoid original unsafe behaviors such as passing too near the table’s surface, getting stuck near the gate, or going under the ladder.          </p>
           <div style="text-align: center;">
             <img src="static/images/chair.png" alt="chair" width="75%">
           </div>
@@ -234,28 +283,60 @@
 <!-- End Policy Modification -->
 
 
+<!--Hardware tests video-->
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body" style="display: flex; justify-content: space-between; align-items: center; gap: 70px;">
+        <!-- Test Yes Backup with Caption -->
+        <div style="text-align: center;">
+          <video poster="" id="example1-video" autoplay controls muted loop width="300" height="300">
+            <source src="static/videos/over_table.mp4" type="video/mp4">
+          </video>
+          <h2 class="subtitle has-text-centered">
+            Warning triggered, backup results in high ascent over table
+          </h2>
+        </div>
+  
+        <!-- Test No Backup with Caption -->
+        <div style="text-align: center;">
+          <video poster="" id="example2-video" autoplay controls muted loop width="300" height="300">
+            <source src="static/videos/across_room.mp4" type="video/mp4">
+          </video>
+          <h2 class="subtitle has-text-centered">
+            No warning triggered, so nominal policy throughout
+          </h2>
+        </div>
+
+    </div>
+  </div>
+</section>
+<!-- End warning test video -->
 
 
-
-<!-- Youtube video -->
+<!-- Hardware tests video -->
+<!-- 
 <section class="hero is-small">
   <div class="hero-body">
     <div class="container">
+-->
       <!-- Paper video. -->
-      <h2 class="title is-3">Supplementary Videos</h2>
+<!--
+      <h2 class="title is-3">Hardware Videos</h2>
       <div class="columns is-centered has-text-centered">
         <div class="column is-four-fifths">
           
           <div class="publication-video">
+-->
             <!-- Youtube embed code here -->
-            
+<!--
           </div>
         </div>
       </div>
     </div>
   </div>
 </section>
-<!-- End youtube video -->
+-->
+<!-- End hardware tests video -->
 
 
 

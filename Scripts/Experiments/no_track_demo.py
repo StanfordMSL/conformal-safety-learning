@@ -106,9 +106,10 @@ if __name__ == '__main__':
 
     if SAVE:
         name = f'{FILTER_SUFFIX}'
+        title = 'Naively Constrained Nominal MPC'
         fig = ax.get_figure()
         full_name = os.path.join(output_dir, name)
-
+        fig.suptitle(title)
         fig.tight_layout()
 
         fig.savefig(full_name + '.svg')

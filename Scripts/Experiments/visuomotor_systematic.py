@@ -39,11 +39,11 @@ if __name__ == '__main__':
     # Whether to load (or generate) the train-test splits
     LOAD_DATA = True
     # Whether to save the train-test splits
-    SAVE_DATA = False
+    SAVE_DATA = True
     # Whether to load (or generate) the experimental results
     LOAD = True
     # Whether to save the experimental results and figures
-    SAVE = False
+    SAVE = True
 
     output_dir = '../Figures/visuomotor_systematic_figs'
     figsize = (5,3)
@@ -132,15 +132,17 @@ if __name__ == '__main__':
 
     if SAVE:
         names = ['conditional_miss', 'omega']
+        titles = ['Empirical Miss Rate', 'Classification Power']
         axes = [ax1, ax2]
 
         for i, name in enumerate(names):
             ax = axes[i]
             full_name = os.path.join(output_dir, name)
             fig = ax.get_figure()
+            fig.suptitle(titles[i])
 
             # Resize
-            fig.set_size_inches(*figsize) 
+            fig.set_size_inches(*figsize)
 
             fig.savefig(full_name + '.svg', bbox_inches='tight')
             fig.savefig(full_name + '.png', bbox_inches='tight')

@@ -52,8 +52,8 @@ if __name__ == '__main__':
     #### User Settings ####
     EXP_DIR = os.path.join('../data', 'visuomotor')
 
-    LOAD = False
-    SAVE = True
+    LOAD = True
+    SAVE = False
 
     verbose = True
 
