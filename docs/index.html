@@ -69,7 +69,7 @@
 
                   <!-- ArXiv Link -->
                   <span class="link-block">
-                    <a href="" target="_blank"
+                    <a href="https://arxiv.org/abs/2501.04823" target="_blank"
                     class="external-link button is-normal is-rounded is-dark">
                     <span class="icon">
                       <i class="ai ai-arxiv"></i>
@@ -124,7 +124,8 @@
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-            Ensuring robot safety can oftentimes be challenging; user-defined constraints can miss edge cases, learned policies can become unsafe even when trained from safe demonstrations, and safety can be subjective. Therefore, we propose to learn about robot safety by showing policy trajectories to a user who flags unsafe behavior. Using this binary feedback, we leverage the statistical method of conformal prediction to identify a region of states, potentially in learned latent space, probabilistically guaranteed to contain a user-specified fraction of future policy errors. Our method is sample-efficient, as it builds on nearest neighbor classification and avoids withholding data as is common with conformal prediction. By alerting if reaching the suspected unsafe region, we obtain a warning system with a guaranteed miss rate. We show in our experiments that from human video labeling of quadcopter trajectories, our warning system can preemptively detect when a visuomotor policy will fail to steer through a designated gate. Lastly, we present an approach for policy improvement by avoiding the suspected unsafe region. We verify its performance in experimental testing with 30 quadcopter flights across 6 navigation tasks; using human feedback we improve safety for a model predictive controller.          </p>
+            Ensuring robot safety can be challenging; user-defined constraints can miss edge cases, policies can become unsafe even when trained from safe data, and safety can be subjective. Thus, we learn about robot safety by showing policy trajectories to a human who flags unsafe behavior. From this binary feedback, we use the statistical method of conformal prediction to identify a region of states, potentially in learned latent space, guaranteed to contain a user-specified fraction of future policy errors. Our method is sample-efficient, as it builds on nearest neighbor classification and avoids withholding data as is common with conformal prediction. By alerting if the robot reaches the suspected unsafe region, we obtain a warning system that mimics the human's safety preferences with guaranteed miss rate. From video labeling, our system can detect when a quadcopter visuomotor policy will fail to steer through a designated gate. We present an approach for policy improvement by avoiding the suspected unsafe region. With it we improve a model predictive controller's safety, as shown in experimental testing with 30 quadcopter flights across 6 navigation tasks.
+          </p>
         </div>
       </div>
     </div>
@@ -290,17 +291,17 @@
         <!-- Test Yes Backup with Caption -->
         <div style="text-align: center;">
           <video poster="" id="example1-video" autoplay controls muted loop width="300" height="300">
-            <source src="static/videos/over_table.mp4" type="video/mp4">
+            <source src="static/videos/chair_to_left_cropped.mp4" type="video/mp4">
           </video>
           <h2 class="subtitle has-text-centered">
-            Warning triggered, backup results in high ascent over table
+            Warning triggered, backup results in higher ascent over table
           </h2>
         </div>
   
         <!-- Test No Backup with Caption -->
         <div style="text-align: center;">
           <video poster="" id="example2-video" autoplay controls muted loop width="300" height="300">
-            <source src="static/videos/across_room.mp4" type="video/mp4">
+            <source src="static/videos/chair_to_right_cropped.mp4" type="video/mp4">
           </video>
           <h2 class="subtitle has-text-centered">
             No warning triggered, so nominal policy throughout
@@ -310,50 +311,49 @@
     </div>
   </div>
 </section>
-<!-- End warning test video -->
 
-
-<!-- Hardware tests video -->
-<!-- 
-<section class="hero is-small">
-  <div class="hero-body">
-    <div class="container">
--->
-      <!-- Paper video. -->
-<!--
-      <h2 class="title is-3">Hardware Videos</h2>
-      <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
-          
-          <div class="publication-video">
--->
-            <!-- Youtube embed code here -->
-<!--
-          </div>
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body" style="display: flex; justify-content: space-between; align-items: center; gap: 70px;">
+        <!-- Test Yes Backup with Caption -->
+        <div style="text-align: center;">
+          <video poster="" id="example1-video" autoplay controls muted loop width="300" height="300">
+            <source src="static/videos/ladder_to_middle_cropped.mp4" type="video/mp4">
+          </video>
+          <h2 class="subtitle has-text-centered">
+            Warning triggered, goes around not through ladder
+          </h2>
         </div>
-      </div>
+  
+        <!-- Test No Backup with Caption -->
+        <div style="text-align: center;">
+          <video poster="" id="example2-video" autoplay controls muted loop width="300" height="300">
+            <source src="static/videos/chair_to_middle_cropped.mp4" type="video/mp4">
+          </video>
+          <h2 class="subtitle has-text-centered">
+            Warning triggered, avoids getting stuck near gate
+          </h2>
+        </div>
+
     </div>
   </div>
 </section>
--->
-<!-- End hardware tests video -->
 
-
-
-
+<!-- End warning test video -->
 
 <!--BibTex citation -->
   <section class="section" id="BibTeX">
     <div class="container is-max-desktop content">
       <h2 class="title">BibTeX</h2>
-      <pre><code>@misc{feldman2024conformal,
-      title={Learning Robot Safety from Sparse Human Feedback using Conformal Prediction}, 
-      author={Aaron O. Feldman and Joseph A. Vincent and Maximilian Adang and Jun En Low and Mac Schwager},
-      year={2024},
-      eprint={},
-      archivePrefix={arXiv},
-      primaryClass={}
-}</code></pre>
+      <pre><code>@misc{feldman2025learningrobotsafetysparse,
+        title={Learning Robot Safety from Sparse Human Feedback using Conformal Prediction}, 
+        author={Aaron O. Feldman and Joseph A. Vincent and Maximilian Adang and Jun En Low and Mac Schwager},
+        year={2025},
+        eprint={2501.04823},
+        archivePrefix={arXiv},
+        primaryClass={cs.RO},
+        url={https://arxiv.org/abs/2501.04823}, 
+  }</code></pre>
     </div>
 </section>
 <!--End BibTex citation -->

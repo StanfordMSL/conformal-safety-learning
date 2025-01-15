@@ -24,7 +24,7 @@ Note: the following procedure was tested using a WSL2 linux environment on a com
     c. Under the line "output_dir: !!python/object/apply:pathlib.PosixPath", similarly modify with the absolute path to data/nerf_data/outputs
 
 ### Download data
-    a. To recreate experimental results, download zipped data at https://drive.google.com/file/d/1_Y5M49tdPjULlX6H2U2Bfk220svOM7uB/view?usp=drive_link
+    a. To recreate experimental results, download zipped data at https://drive.google.com/file/d/1dkT01Ju7w3qwdN1J5fRX2183YipLuoiM/view?usp=sharing
     b. Extract the data and place it at conformal-safety-learning/data
 
 ## Scripts Organization
